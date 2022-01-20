@@ -31,8 +31,8 @@ async function handleGetBooks(request, response) {
  try {
   // let booksFromDB = await Book.find({location: request.query.location});
   let queryObj = {};
-  if(request.query.location) {
-    queryObj = {location:request.query.location}
+  if(request.query.title) {
+    queryObj = {title:request.query.title}
   }
 
   if (booksFromDB) {

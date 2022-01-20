@@ -13,7 +13,7 @@ async function seed() {
     title: 'Book of Pedro',
     description: 'The Story of Pedro',
     status: 'Available',
-    email: 'placeholder',
+    email: '1223PGP',
   });
   myBook.save(function (err) {
     if (err) console.error(err);
@@ -25,7 +25,7 @@ async function seed() {
     title: 'Book of Aoife',
     description: 'The Story of Aoife',
     status: 'Available',
-    email: 'placeholder',
+    email: '321AWM',
   });
 
   console.log('saved New Book 2');
