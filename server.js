@@ -28,14 +28,19 @@ app.get('/', (request, response) => {
 app.get('/books',handleGetBooks);
 
 async function handleGetBooks(request, response) {
+  //console.log(request.query.email);
  try {
-  // let booksFromDB = await Book.find({location: request.query.location});
-  let queryObj = {};
-  if(request.query.title) {
-    queryObj = {title:request.query.title}
-  }
+  let booksFromDB = await Book.find({email: request.query.email});
+  //let queryObj = {};
+  // console.log(booksFromDB.find(book => book.email === request.query.email));
 
-  if (booksFromDB) {
+  // if(request.query.email) {
+  //   booksFromDB = booksFromDB.find(book => book.email === request.query.email);
+  // }
+
+  console.log(booksFromDB);
+
+  if (booksFromDB !== [] && booksFromDB) {
     response.status(200).send(booksFromDB);
   } else {
     response.status(400).send('No Books Available');
