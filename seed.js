@@ -30,6 +30,33 @@ async function seed() {
 
   console.log('saved New Book 2');
 
+  await Book.create({
+    title: 'Coffee',
+    description: 'The Story of Coffe',
+    status: 'Available',
+    email: '321AWM',
+  });
+
+  console.log('saved New Book 3');
+
+  await Book.create({
+    title: 'Dunes',
+    description: 'The Story of Dunes',
+    status: 'Available',
+    email: '321AWM',
+  });
+
+  console.log('saved New Book 4');
+
+  await Book.create({
+    title: 'Eglish Labs',
+    description: 'The Story of English Lab',
+    status: 'Available',
+    email: '321AWM',
+  });
+
+  console.log('saved New Book 5');
+
   mongoose.disconnect();
 }
 
