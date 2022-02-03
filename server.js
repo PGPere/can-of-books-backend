@@ -84,24 +84,24 @@ async function deleteBook(request, response) {
 async function updateBook (request, response) {
   try {
     // Collect information about request, find book
-  const email = request.query.email;
-  const id = request.params.id;
-  const book = await Book.findOne({ _id: id, email: email });
+    const email = request.query.email;
+    const id = request.params.id;
+    const book = await Book.findOne({ _id: id, email: email });
 
-  // check if book exists. if not, 404
-  if(!book){
-    response.status(404).send('Book not found.');
-    return;
-  }
+    // check if book exists. if not, 404
+    if(!book){
+      response.status(404).send('Book not found.');
+      return;
+    }
 
-  // Collect new information for the book
-  const { title, description, status } = request.body;
+    // Collect new information for the book
+    const { title, description, status } = request.body;
 
-  // Update the book in the database with the new info
-  const updatedBook = await Book.findByIdAndUpdate(id, { title, description, status }, { new: true, overwrite: true });
+    // Update the book in the database with the new info
+    const updatedBook = await Book.findByIdAndUpdate(id, { title, description, status }, { new: true, overwrite: true });
 
-  // Send the book back so the frontend can quickly display the updates without querying the entire db again
-  res.status(200).send(updatedBook);
+    // Send the book back so the frontend can quickly display the updates without querying the entire db again
+    res.status(200).send(updatedBook);
   } catch (e) {
     console.error(e);
     response.status(500).send(`Unexpected server error: ${e}`);
