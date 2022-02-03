@@ -18,11 +18,14 @@ db.once('open', function() {
   console.log('Mongoose is connected')
 });
 const Book = require('./models/bookModel');
+const req = require('express/lib/request');
+const res = require('express/lib/response');
 
 // routes
 app.get('/books', getBooks);
 app.post('/books', createBook);
 app.delete('/books/:id', deleteBook);
+app.put('/books/:id', updateBook);
 
 
 // route handlers
@@ -31,9 +34,9 @@ async function getBooks(request, response) {
   try {
     const books = await Book.find({ email: request.query.email });
     response.send(books);
-  } catch (error) {
-    console.error(error);
-    response.status(400).send('Could not find books');
+  } catch (e) {
+    console.error(e);
+    response.status(500).send(`Could not find books: unexpected server error: ${e}`);
   }
 }
 
@@ -42,9 +45,9 @@ async function createBook(request, response) {
   try {
     const book = await Book.create(request.body);
     response.send(book);
-  } catch (error) {
-    console.error(error);
-    response.status(400).send('unable to create book');
+  } catch (e) {
+    console.error(e);
+    response.status(500).send(`Could not create book: unexpected server error: ${e}`);
   }
 }
 
@@ -72,9 +75,40 @@ async function deleteBook(request, response) {
 
 
 
-  } catch (error) {
-    console.error(error);
-    response.status(400).send('unable to delete book');
+  } catch (e) {
+    console.error(e);
+    response.status(500).send(`Could not delete book: unexpected server error: ${e}`);
+  }
+}
+
+async function updateBook (request, response) {
+  try {
+    // Collect information about request, find book
+    const email = request.query.email;
+    const id = request.params.id;
+    const book = await Book.findOne({ _id: id, email: email });
+    console.log(`id: ${id}`);
+    console.log(`email: ${email}`);
+    console.log(`book:`);
+    console.log(book);
+
+    // check if book exists. if not, 404
+    if(!book){
+      response.status(404).send('Book not found.');
+      return;
+    }
+
+    // Collect new information for the book
+    const { title, description, status } = request.body;
+
+    // Update the book in the database with the new info
+    const updatedBook = await Book.findByIdAndUpdate(id, { title, description, status }, { new: true });
+
+    // Send the book back so the frontend can quickly display the updates without querying the entire db again
+    response.status(200).send(updatedBook);
+  } catch (e) {
+    console.error(e);
+    response.status(500).send(`Unexpected server error: ${e}`);
   }
 }
 
