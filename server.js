@@ -25,7 +25,7 @@ const res = require('express/lib/response');
 app.get('/books', getBooks);
 app.post('/books', createBook);
 app.delete('/books/:id', deleteBook);
-app.put('/books:id', updateBook);
+app.put('/books/:id', updateBook);
 
 
 // route handlers
@@ -87,6 +87,10 @@ async function updateBook (request, response) {
     const email = request.query.email;
     const id = request.params.id;
     const book = await Book.findOne({ _id: id, email: email });
+    console.log(`id: ${id}`);
+    console.log(`email: ${email}`);
+    console.log(`book:`);
+    console.log(book);
 
     // check if book exists. if not, 404
     if(!book){
@@ -98,10 +102,10 @@ async function updateBook (request, response) {
     const { title, description, status } = request.body;
 
     // Update the book in the database with the new info
-    const updatedBook = await Book.findByIdAndUpdate(id, { title, description, status }, { new: true, overwrite: true });
+    const updatedBook = await Book.findByIdAndUpdate(id, { title, description, status }, { new: true });
 
     // Send the book back so the frontend can quickly display the updates without querying the entire db again
-    res.status(200).send(updatedBook);
+    response.status(200).send(updatedBook);
   } catch (e) {
     console.error(e);
     response.status(500).send(`Unexpected server error: ${e}`);
