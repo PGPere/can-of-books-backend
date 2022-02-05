@@ -3,6 +3,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
+const verifyUser = require('./auth.js'); // lab 14
 
 const PORT = process.env.PORT || 3002;
 const app = express();
@@ -26,6 +27,7 @@ app.get('/books', getBooks);
 app.post('/books', createBook);
 app.delete('/books/:id', deleteBook);
 app.put('/books/:id', updateBook);
+app.get('/user', handleGetUser);
 
 
 // route handlers
@@ -110,6 +112,22 @@ async function updateBook (request, response) {
     console.error(e);
     response.status(500).send(`Unexpected server error: ${e}`);
   }
+}
+
+// lab 14 - Auth
+// this is a route to verify the user
+function handleGetUser(req, res) {
+  // verifyUser is defined in the auth.js
+  verifyUser(req, (err, user) => {
+    // "error-first" function
+    if (err) {
+      // if there is a problem verifying you
+      res.send('invalid token');
+    } else {
+      // if there is not a problem verifying you
+      res.send(user);
+    }
+  })
 }
 
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
